@@ -5,10 +5,273 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="$CONTROLLER_NAME$"
-            prefHeight="400.0" prefWidth="600.0" >
+<BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controller.MainController">
+    <top>
+        <!-- BARRE DE MENU -->
+        <VBox>
+            <MenuBar>
+                <menus>
+                    <Menu text="Événements">
+                        <items>
+                            <MenuItem fx:id="menuNouvelEvenement" onAction="#creerNouvelEvenement" text="Nouvel Événement" />
+                            <SeparatorMenuItem />
+                            <MenuItem fx:id="menuSauvegarder" onAction="#sauvegarderDonnees" text="Sauvegarder" />
+                            <MenuItem fx:id="menuCharger" onAction="#chargerDonnees" text="Charger" />
+                            <SeparatorMenuItem />
+                            <MenuItem fx:id="menuDemoObserver" onAction="#lancerDemoObserver" text="Démo Pattern Observer" />
+                        </items>
+                    </Menu>
+                    <Menu text="Participants">
+                        <items>
+                            <MenuItem fx:id="menuNouveauParticipant" onAction="#creerNouveauParticipant" text="Nouveau Participant" />
+                        </items>
+                    </Menu>
+                    <Menu text="Aide">
+                        <items>
+                            <MenuItem fx:id="menuAPropos" onAction="#afficherAPropos" text="À propos" />
+                        </items>
+                    </Menu>
+                </menus>
+            </MenuBar>
 
-</AnchorPane>
+            <!-- BARRE D'OUTILS -->
+            <ToolBar>
+                <Button fx:id="btnNouvelEvenement" onAction="#creerNouvelEvenement" text="Nouvel Événement">
+                    <tooltip><Tooltip text="Créer un nouvel événement" /></tooltip>
+                </Button>
+                <Button fx:id="btnNouveauParticipant" onAction="#creerNouveauParticipant" text="Nouveau Participant">
+                    <tooltip><Tooltip text="Ajouter un nouveau participant" /></tooltip>
+                </Button>
+                <Separator orientation="VERTICAL" />
+                <Button fx:id="btnDemoObserver" onAction="#lancerDemoObserver" text="Démo Observer">
+                    <tooltip><Tooltip text="Lancer une démonstration du Pattern Observer" /></tooltip>
+                </Button>
+                <Separator orientation="VERTICAL" />
+                <Button fx:id="btnSauvegarder" onAction="#sauvegarderDonnees" text="Sauvegarder">
+                    <tooltip><Tooltip text="Sauvegarder les données" /></tooltip>
+                </Button>
+                <Button fx:id="btnCharger" onAction="#chargerDonnees" text="Charger">
+                    <tooltip><Tooltip text="Charger des données" /></tooltip>
+                </Button>
+            </ToolBar>
+        </VBox>
+    </top>
+
+    <center>
+        <!-- CONTENU PRINCIPAL AVEC ONGLETS -->
+        <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
+
+            <!-- ONGLET 1: GESTION DES ÉVÉNEMENTS -->
+            <Tab text="📅 Événements">
+                <content>
+                    <VBox spacing="10.0">
+                        <padding><Insets bottom="10.0" left="10.0" right="10.0" top="10.0" /></padding>
+
+                        <!-- BARRE DE RECHERCHE ET ACTIONS -->
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                            <Label text="Rechercher:" />
+                            <TextField fx:id="txtRechercheEvenements" onKeyReleased="#rechercherEvenements" promptText="Nom, lieu, type...">
+                                <HBox.hgrow>ALWAYS</HBox.hgrow>
+                            </TextField>
+                            <Button fx:id="btnEffacerRechercheEv" onAction="#effacerRechercheEvenements" text="Effacer" />
+                            <Separator orientation="VERTICAL" />
+                            <Button fx:id="btnSupprimerEvenement" onAction="#supprimerEvenementSelectionne" text="Supprimer" />
+                            <Button fx:id="btnModifierEvenement" onAction="#modifierEvenementSelectionne" text="Modifier" />
+                        </HBox>
+
+                        <!-- TABLEAU DES ÉVÉNEMENTS -->
+                        <TableView fx:id="tableEvenements" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colEvenementId" prefWidth="80.0" text="ID" />
+                                <TableColumn fx:id="colEvenementNom" prefWidth="200.0" text="Nom" />
+                                <TableColumn fx:id="colEvenementType" prefWidth="100.0" text="Type" />
+                                <TableColumn fx:id="colEvenementDate" prefWidth="150.0" text="Date" />
+                                <TableColumn fx:id="colEvenementLieu" prefWidth="150.0" text="Lieu" />
+                                <TableColumn fx:id="colEvenementCapacite" prefWidth="100.0" text="Capacité" />
+                                <TableColumn fx:id="colEvenementParticipants" prefWidth="120.0" text="Participants" />
+                                <TableColumn fx:id="colEvenementObservers" prefWidth="100.0" text="Observers" />
+                                <TableColumn fx:id="colEvenementStatut" prefWidth="80.0" text="Statut" />
+                            </columns>
+                            <tooltip><Tooltip text="Double-clic pour voir les détails d'un événement" /></tooltip>
+                        </TableView>
+
+                    </VBox>
+                </content>
+            </Tab>
+
+            <!-- ONGLET 2: GESTION DES PARTICIPANTS -->
+            <Tab text="👥 Participants">
+                <content>
+                    <VBox spacing="10.0">
+                        <padding><Insets bottom="10.0" left="10.0" right="10.0" top="10.0" /></padding>
+
+                        <!-- BARRE DE RECHERCHE PARTICIPANTS -->
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                            <Label text="Rechercher:" />
+                            <TextField fx:id="txtRechercheParticipants" onKeyReleased="#rechercherParticipants" promptText="Nom, email...">
+                                <HBox.hgrow>ALWAYS</HBox.hgrow>
+                            </TextField>
+                            <Button fx:id="btnEffacerRecherchePart" onAction="#effacerRechercheParticipants" text="Effacer" />
+                            <Separator orientation="VERTICAL" />
+                            <Button fx:id="btnInscrireParticipant" onAction="#inscrireParticipantAEvenement" text="Inscrire à un événement" />
+                        </HBox>
+
+                        <!-- TABLEAU DES PARTICIPANTS -->
+                        <TableView fx:id="tableParticipants" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colParticipantId" prefWidth="100.0" text="ID" />
+                                <TableColumn fx:id="colParticipantNom" prefWidth="200.0" text="Nom" />
+                                <TableColumn fx:id="colParticipantEmail" prefWidth="250.0" text="Email" />
+                                <TableColumn fx:id="colParticipantType" prefWidth="150.0" text="Type" />
+                            </columns>
+                        </TableView>
+
+                    </VBox>
+                </content>
+            </Tab>
+
+            <!-- ONGLET 3: INSCRIPTIONS ET OBSERVERS -->
+            <Tab text="🔔 Inscriptions &amp; Observers">
+                <content>
+                    <VBox spacing="10.0">
+                        <padding><Insets bottom="10.0" left="10.0" right="10.0" top="10.0" /></padding>
+
+                        <!-- SÉLECTION D'ÉVÉNEMENT -->
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                            <Label text="Événement:" />
+                            <ComboBox fx:id="comboEvenementsInscription" onAction="#selectionnerEvenementInscription" promptText="Sélectionner un événement...">
+                                <HBox.hgrow>ALWAYS</HBox.hgrow>
+                            </ComboBox>
+                            <Button fx:id="btnActualiserInscriptions" onAction="#actualiserInscriptions" text="Actualiser" />
+                        </HBox>
+
+                        <HBox spacing="20.0" VBox.vgrow="ALWAYS">
+                            <!-- PARTICIPANTS INSCRITS -->
+                            <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                <Label text="Participants Inscrits (Observers Automatiques)">
+                                    <font><Font name="System Bold" size="14.0" /></font>
+                                </Label>
+                                <ListView fx:id="listParticipantsInscrits" VBox.vgrow="ALWAYS">
+                                    <tooltip><Tooltip text="Liste des participants inscrits qui reçoivent automatiquement les notifications" /></tooltip>
+                                </ListView>
+                                <Button fx:id="btnDesinscrire" onAction="#desinscrireParticipantSelectionne" text="Désinscrire le participant sélectionné" />
+                            </VBox>
+
+                            <!-- PARTICIPANTS DISPONIBLES -->
+                            <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                <Label text="Participants Disponibles">
+                                    <font><Font name="System Bold" size="14.0" /></font>
+                                </Label>
+                                <ListView fx:id="listParticipantsDisponibles" VBox.vgrow="ALWAYS">
+                                    <tooltip><Tooltip text="Participants qui peuvent être inscrits à cet événement" /></tooltip>
+                                </ListView>
+                                <Button fx:id="btnInscrireSelectionne" onAction="#inscrireParticipantSelectionne" text="Inscrire le participant sélectionné" />
+                            </VBox>
+                        </HBox>
+
+                    </VBox>
+                </content>
+            </Tab>
+
+            <!-- ONGLET 4: NOTIFICATIONS ET LOGS -->
+            <Tab text="📢 Notifications &amp; Logs">
+                <content>
+                    <VBox spacing="10.0">
+                        <padding><Insets bottom="10.0" left="10.0" right="10.0" top="10.0" /></padding>
+
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                            <Label text="Journal des Notifications (Pattern Observer)">
+                                <font><Font name="System Bold" size="16.0" /></font>
+                            </Label>
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Button fx:id="btnEffacerLogs" onAction="#effacerLogs" text="Effacer" />
+                            <Button fx:id="btnTestNotification" onAction="#testerNotifications" text="Test Notifications" />
+                        </HBox>
+
+                        <TextArea fx:id="textAreaLogs" editable="false" VBox.vgrow="ALWAYS" wrapText="true">
+                            <font><Font size="12.0" /></font>
+                            <tooltip><Tooltip text="Affiche en temps réel toutes les notifications du Pattern Observer" /></tooltip>
+                        </TextArea>
+
+                    </VBox>
+                </content>
+            </Tab>
+
+            <!-- ONGLET 5: STATISTIQUES -->
+            <Tab text="📊 Statistiques">
+                <content>
+                    <VBox spacing="10.0">
+                        <padding><Insets bottom="10.0" left="10.0" right="10.0" top="10.0" /></padding>
+
+                        <Label text="Statistiques du Système">
+                            <font><Font name="System Bold" size="16.0" /></font>
+                        </Label>
+
+                        <GridPane hgap="20.0" vgap="10.0">
+                            <columnConstraints>
+                                <ColumnConstraints />
+                                <ColumnConstraints />
+                                <ColumnConstraints />
+                            </columnConstraints>
+
+                            <!-- STATISTIQUES GÉNÉRALES -->
+                            <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                <Label text="Statistiques Générales">
+                                    <font><Font name="System Bold" size="14.0" /></font>
+                                </Label>
+                                <Label fx:id="lblNbEvenements" text="Événements: 0" />
+                                <Label fx:id="lblNbParticipants" text="Participants: 0" />
+                                <Label fx:id="lblNbInscriptions" text="Inscriptions totales: 0" />
+                                <Label fx:id="lblTauxOccupation" text="Taux d'occupation: 0%" />
+                            </VBox>
+
+                            <!-- STATISTIQUES OBSERVER -->
+                            <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                <Label text="Pattern Observer">
+                                    <font><Font name="System Bold" size="14.0" /></font>
+                                </Label>
+                                <Label fx:id="lblNbObservers" text="Observers actifs: 0" />
+                                <Label fx:id="lblNbNotifications" text="Notifications envoyées: 0" />
+                            </VBox>
+
+                            <!-- STATISTIQUES PAR TYPE -->
+                            <VBox spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                                <Label text="Répartition par Type">
+                                    <font><Font name="System Bold" size="14.0" /></font>
+                                </Label>
+                                <Label fx:id="lblNbConferences" text="Conférences: 0" />
+                                <Label fx:id="lblNbConcerts" text="Concerts: 0" />
+                            </VBox>
+                        </GridPane>
+
+                        <Button fx:id="btnActualiserStats" onAction="#actualiserStatistiques" text="Actualiser les Statistiques" />
+
+                        <Region VBox.vgrow="ALWAYS" />
+
+                    </VBox>
+                </content>
+            </Tab>
+
+        </TabPane>
+    </center>
+
+    <bottom>
+        <!-- BARRE DE STATUT -->
+        <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: #f0f0f0; -fx-border-color: #cccccc; -fx-border-width: 1 0 0 0;">
+            <padding><Insets bottom="5.0" left="10.0" right="10.0" top="5.0" /></padding>
+
+            <Label fx:id="lblStatut" text="Prêt" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="lblNombreEvenementsStatut" text="0 événements" />
+            <Separator orientation="VERTICAL" />
+            <Label fx:id="lblNombreParticipantsStatut" text="0 participants" />
+            <Separator orientation="VERTICAL" />
+            <Label fx:id="lblObserversStatut" text="0 observers" />
+        </HBox>
+    </bottom>
+
+</BorderPane>
+
